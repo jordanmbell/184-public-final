@@ -34,8 +34,7 @@
         <p align="middle">
             Amy Doo, Jordan Bell, Katlyn Ho, Su Latt Phone 
         </p>
-        <a href="https://docs.google.com/presentation/d/178fre6YwUQaHOf0MooU0J5am0CIUA8MGFNkVc574TFE/edit?usp=sharing">Link to Slides</a> 
-         <a href="https://drive.google.com/file/d/1hSTB0Ur1a_hAQxx9xWkd1Xnr31i_9n2F/view?usp=sharing">Link to Video</a> 
+        <a href="https://drive.google.com/file/d/1bbxIjYzXVYXT-UH3GqCJkJZFn2k7LHVz/view?usp=sharing">Link to Video</a>
         <h2>Abstract</h2>
         
         <p>
@@ -109,14 +108,14 @@
             on is smaller than a pixel, ensuring that it can be in perfect focus. To do this we used the equation for circle of confusion from lecture: 
         </p>
 
-        <p>C / A = |Z_s - Z_i| / Z_i</p>
+        <p><code>C / A = |Z_s - Z_i| / Z_i</code></p>
 
         <p>
             We plug in the height of a pixel for C, the current lens aperture size for A, and then we know that our step size should be at most 2 * |Z_s - Z_i| 
             as this ensures that it will test within the |Z_s - Z_i| on either side. Solving for that we get:
         </p>
         <p>
-            Step size = 2 * C * Z_i / A
+            Step size = <code>2 * C * Z_i / A</code>
         </p>
         <p>
             Z_i is unknown as that would require us to know the optimal distance for the sensor plane, but to make sure that we have a small enough step size we 
@@ -168,7 +167,7 @@
             worked best. Multiplying instead of adding certain values would lead to drastically different outputs that would change things such as exposure, 
             saturation, and contrast in the image. The resources and suggestions for changing just the exposure of the image didn’t turn out as expected, 
             but we were able to find a tonemap() method in the given code that does edit the exposure of the RGB pixels in the sample buffer. 
-            <br/><strong>[insert exposure equation]</strong><br/>
+            <br/><code>[insert exposure equation]</code><br/>
             Auto-exposure takes each pixel value and scales it by the amount shown in this equation, where avgBrightness is calculated from the illuminance 
             of each pixel. This final equation is an adaptation of the code in tonemap() and was derived after testing of different scaling values. 
             Seeing how increasing/decreasing, adding/subtracting, multiplying/dividing, etc. changed the image helped in narrowing down the scaling equation. 
