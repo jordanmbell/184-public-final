@@ -139,20 +139,24 @@
                 <p>The next three heuristics all first convert the image to grayscale by summing the RGB channels weighted by human perception.</p>
                 <li>
                     A Sum-Modified Laplacian heuristic that detects edges by quadrupling the current pixel and subtracting the neighboring 4 pixels, 
-                    summing to the total if the value is above a certain threshold
+                    summing to the total if the value is above a certain threshold. This was based off of the paper linked in references.
                 </li>
                 <li>
-                    A gradient based heuristic that subtracts the pixel value below and to the left from the current pixel before summing
+                    A gradient based heuristic that subtracts the pixel value below and to the left from the current pixel before summing.
                 </li>
                 <li>
-                    A similar heuristic to 1. but computing the variance altogether after converting to grayscale.
+                    A similar heuristic to 1 but computing the variance altogether after converting to grayscale. Giving the benefit of weighting the variances
+                    by human perception so that we do not give too little or too much weight to any color.
                 </li>
             </ol>
         </p>
         <p>
             We decided to use 4. as it provided consistent results when using large and small images and when there was even a small amount of 
             contrast in the selection. 1 was similar but performed worse overall, 2 struggled when there was less contrast and also required precise 
-            tuning, and 3 only worked when the edge was a certain orientation. Using 4 we could use an area on the order of 6x6 pixels to focus on, 
+            tuning, and 3 only worked when the edge was a certain orientation. We also learned from this that converting to grayscale is a great technique
+            for when you are trying to run detection algorithms on an image, as it gives a single variable to compute with while also weighting for what humans see.
+            
+            Using 4 we could use an area on the order of 6x6 pixels to focus on, 
             meaning that the algorithm ran very quickly, 30 sec to 1 min depending on the lens. 
         </p>
 
