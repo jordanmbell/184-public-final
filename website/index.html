@@ -49,33 +49,35 @@
         <h2>
             Technical Approach
         </h2>
-        <h1>Building a Basic Working Camera</h1>
-        <h2>Lenstester</h2>
+
+        <h2>Building a Basic Working Camera</h2>
+        <h3>Lenstester</h3>
         <p>
-            To build a basic working camera, ray tracing was utilized. Lenstester is a debugging tool that we implemented to make sure that 
+            To build a basic working camera, ray tracing was utilized. <i>Lenstester</i> is a debugging tool that we implemented to make sure that 
             the rays refracted properly through a lens system. It is important to be able to go both forwards and backwards through the lenses, 
             as we need to be able to calculate the close focal point and infinity focal point for our lens system.
         </p>
-        <h2>Lens Parameters and Sample Generation</h2>
+        <h3>Lens Parameters and Sample Generation</h3>
 
         <p>
-            Working alongside these tracing functions, we have Lens and LensCamera functions that are essential to help with setting lens 
-            parameters, setting focus depth, sampling from the back of the lens that is nearest to the sensor, and generating a ray from the 
-            sensor towards the point sampled from the back of the lens nearest to the sensor and tracing this ray through the lens.
+            Working alongside these tracing functions, we have <i>Lens</i> and <i>LensCamera</i> functions that are essential to help with setting lens parameters, setting focus depth, sampling from the back of the lens that is nearest to the sensor, and generating a ray from the sensor towards the point sampled from the back of the lens nearest to the sensor and tracing this ray through the lens.
         </p>
         <p>
-            The set_focus_params method calculates infinity focus, near focus, and focal length based on the thick lens approximation and uses the 
-            forward and backward ray tracing methods.
+            The <code>set_focus_params()</code> method calculates infinity focus, near focus, and focal length based on the thick lens approximation and uses the forward and backward ray tracing methods. 
+        </p>
+        <div align="center">
+            <img src="./images/thick_lens.png" width="250px">
+        </div>
+        <p>
             Using the ray-plane intersection equation, the intersection of the resulting refracted ray through the lens and the z axis can be found to determine 
             the focus parameters.
         </p>
         <p>
-            The implementation of the focus_depth method allows for the user to blur or sharpen the rendered image. It computes the conjugate of a ray 
-            starting at the given sensor depth and traces a ray originating from the sensor depth on the z axis through the lens using the trace() 
-            function implemented in Lenstester. The intersection of the resulting refracted ray with the z axis gives the final value.
+            The implementation of the <code>focus_depth()</code> method allows for the user to blur or sharpen the rendered image. It computes the conjugate of a ray 
+            starting at the given sensor depth and traces a ray originating from the sensor depth on the z axis through the lens using the <code>trace()</code> function implemented in Lenstester. The intersection of the resulting refracted ray with the z axis gives the final value.
         </p>
         <p>
-            For the implementation of back_lens_sample()function, first of all, a fixed z-coordinate was calculated; the z-coordinate is fixed because the 
+            For the implementation of <code>back_lens_sample()</code> function, first of all, a fixed z-coordinate was calculated; the z-coordinate is fixed because the 
             function is specifically sampling a point from the back of the lens that is the closest to the sensor, so this is fixed.  Then, for the sampler, 
             at first, UniformGridSampler2D was used, because only the x-coordinate and y-coordinate were needed.  However, the mistake was realized because 
             this samples the points from a 2D grid (square) instead of a 2D circle, certain points sampled were out of bounds on a circle.  Hence,  
@@ -84,15 +86,14 @@
         </p>
 
         <p>
-            For the implementation of generate_ray() function, the main purpose is to generate a ray from the sensor pointing toward a point on the back of the lens 
-            that is nearest to the sensor, and trace it through the lens.  First, the sensor’s position is calculated using the current screen aspect ratio and modeled 
+            For the implementation of <code>generate_ray()</code> function, the main purpose is to generate a ray from the sensor pointing toward a point on the back of the lens that is nearest to the sensor, and trace it through the lens.  First, the sensor’s position is calculated using the current screen aspect ratio and modeled 
             as a standard “full-frame” sensor.  Then, we create a ray using the sensor’s position as the origin of the ray and its direction is constructed with a 
-            vector from the sensor position pointing toward the point sampled using the define back_lens_sample() function. Then, this ray is traced through the lens 
-            using the forward tracing function that was defined.  If the ray made it through the lens, the ray is converted into world view.  Otherwise, a ray that 
+            vector from the sensor position pointing toward the point sampled using the define <code>back_lens_sample()</code> function. Then, this ray is traced through the lens using the forward tracing function that was defined.  If the ray made it through the lens, the ray is converted into world view.  Otherwise, a ray that 
             won’t hit anything is returned.
         </p>
-        <h1>Advanced Features</h1>
-        <h2>Contrast-based Auto-Focus</h2>
+
+        <h2>Advanced Features</h2>
+        <h3>Contrast-based Auto-Focus</h3>
         <p>
             We based our Auto-Focus algorithm algorithm off of the older spec, but extended it and tested different heuristics in order to get the best results. 
             The algorithm works by selecting a small portion of the scene and iteratively testing different sensor plane locations. At each location we re-render 
@@ -107,19 +108,22 @@
             The step size of this iteration is made to be small enough that the largest possible circle of confusion for an object that we are trying to focus 
             on is smaller than a pixel, ensuring that it can be in perfect focus. To do this we used the equation for circle of confusion from lecture: 
         </p>
+        <div align="center">
+            <p><code>C / A = |Z_s - Z_i| / Z_i</code></p>
+        </div>
 
-        <p><code>C / A = |Z_s - Z_i| / Z_i</code></p>
-
         <p>
-            We plug in the height of a pixel for C, the current lens aperture size for A, and then we know that our step size should be at most 2 * |Z_s - Z_i| 
-            as this ensures that it will test within the |Z_s - Z_i| on either side. Solving for that we get:
+            We plug in the height of a pixel for C, the current lens aperture size for A, and then we know that our step size should be at most <code>2 * |Z_s - Z_i|</code> 
+            as this ensures that it will test within the <code>|Z_s - Z_i|</code> on either side. Solving for that we get:
         </p>
+        <div align="center">
+            <p>
+                Step size = <code>2 * C * Z_i / A</code>
+            </p>
+        </div>
         <p>
-            Step size = <code>2 * C * Z_i / A</code>
-        </p>
-        <p>
-            Z_i is unknown as that would require us to know the optimal distance for the sensor plane, but to make sure that we have a small enough step size we 
-            use the smallest possible Z_i, the infinity focal plane. We tested different variations of this algorithm but decided anything other than iterating 
+            <code>Z_i</code> is unknown as that would require us to know the optimal distance for the sensor plane, but to make sure that we have a small enough step size we 
+            use the smallest possible <code>Z_i</code>, the infinity focal plane. We tested different variations of this algorithm but decided anything other than iterating 
             over the whole range was not robust enough. In theory the contrast detecting heuristic should rise to a peak and then fall off afterwards, but none 
             of the heuristics we tested had smooth enough data to use any peak finding algorithms as when tested on different locations and images they had a 
             high probability to find false peaks.
@@ -150,7 +154,7 @@
             tuning, and 3 only worked when the edge was a certain orientation.
         </p>
 
-        <h2>Flash</h2>
+        <h3>Flash</h3>
         <p>
             Another feature we added was flash, which can be toggled on and off with a keyboard command. In order to implement flash, we had to add 
             a light source that was at the same position and pointing in the same direction as the camera. Since the scenes we had were already bright, 
@@ -160,20 +164,24 @@
             for the flash and found that using an area light was most realistic.
         </p>
 
-        <h2>Auto-Exposure</h2>
+        <h3>Auto-Exposure</h3>
         <p>
             The final feature that we implemented adds a little post-production editing directly to the scene where auto exposure can be toggled on and off. 
             When implementing this, the equation and values by which to scale the RGB pixel values took a lot of research and trial and error to find what 
             worked best. Multiplying instead of adding certain values would lead to drastically different outputs that would change things such as exposure, 
             saturation, and contrast in the image. The resources and suggestions for changing just the exposure of the image didn’t turn out as expected, 
-            but we were able to find a tonemap() method in the given code that does edit the exposure of the RGB pixels in the sample buffer. 
-            <br/><code>[insert exposure equation]</code><br/>
-            Auto-exposure takes each pixel value and scales it by the amount shown in this equation, where avgBrightness is calculated from the illuminance 
-            of each pixel. This final equation is an adaptation of the code in tonemap() and was derived after testing of different scaling values. 
+            but we were able to find a <code>tonemap()</code> method in the given code that does edit the exposure of the RGB pixels in the sample buffer. 
+            
+            <div align="center">
+                <code>new RGB value = (old RGB value / (avgBrightness * 2)) ^ 0.5</code>
+            </div>
+            <br>
+
+            Auto-exposure takes each pixel value and scales it by the amount shown in this equation, where <code>avgBrightness</code> is the average illuminance of the pixels. This final equation is an adaptation of the code in <code>tonemap()</code> and was derived after testing of different scaling values. 
             Seeing how increasing/decreasing, adding/subtracting, multiplying/dividing, etc. changed the image helped in narrowing down the scaling equation. 
         </p>
 
-        <h2>Other Problems Encountered</h2>
+        <h3>Other Problems Encountered</h3>
         <p>
             The first major problem we encountered occurred was when interfacing with an older version of pathtracer. Since our project is based off of an 
             old version of CS184 project, there are numerous differences between the old project spec and our current ones that required tweaking to get things setup. 
@@ -193,7 +201,7 @@
             rays that pass through. The last step is to return the number of rays checked and add that to the total samples when dividing the summed returned 
             radiance, as otherwise we are not weighting the returned rays correctly.
         </p>
-        <h2>Lessons Learned</h2>
+        <h3>Lessons Learned</h3>
         <p>
             From this project we learned about the limitations of the single lens model, and the differences between it and a multi-lens system. For autofocus, 
             we found that finding a good heuristic is a difficult task for all scenes, and we thought that it could be a possible area for Machine Learning. 
@@ -310,6 +318,68 @@
         </div>
 
         <p> And finally here are images showing off the auto-exposure</p>
+        <h3>50mm Dougle-Gauss</h3>
+        <div align="center">
+            <table style="width=100%">
+              <tr>
+                <td align="middle">
+                  <img src="images/exposure1_orig.png" width="480px" />
+                  <figcaption align="middle">Original</figcaption>
+                </td>
+                <td align="middle">
+                  <img src="images/exposure1.png" width="480px" />
+                  <figcaption align="middle">With exposure</figcaption>
+                </td>
+              </tr>
+            </table>
+        </div>
+        <h3>22mm Wide-Angle</h3>
+        <div align="center">
+            <table style="width=100%">
+              <tr>
+                <td align="middle">
+                  <img src="images/exposure2_orig.png" width="480px" />
+                  <figcaption align="middle">Original</figcaption>
+                </td>
+                <td align="middle">
+                  <img src="images/exposure2.png" width="480px" />
+                  <figcaption align="middle">With exposure</figcaption>
+                </td>
+              </tr>
+            </table>
+        </div>
+        <h3>250mm Telephoto</h3>
+        <div align="center">
+            <table style="width=100%">
+              <tr>
+                <td align="middle">
+                  <img src="images/exposure3_orig.png" width="480px" />
+                  <figcaption align="middle">Original</figcaption>
+                </td>
+                <td align="middle">
+                  <img src="images/exposure3.png" width="480px" />
+                  <figcaption align="middle">With exposure</figcaption>
+                </td>
+              </tr>
+            </table>
+        </div>
+        <h3>10mm Fisheye</h3>
+        <div align="center">
+            <table style="width=100%">
+              <tr>
+                <td align="middle">
+                  <img src="images/exposure4_orig.png" width="480px" />
+                  <figcaption align="middle">Original</figcaption>
+                </td>
+                <td align="middle">
+                  <img src="images/exposure4.png" width="480px" />
+                  <figcaption align="middle">With exposure</figcaption>
+                </td>
+              </tr>
+            </table>
+        </div>
+
+
         <h3>Flash and Auto-Exposure</h3>
         <p>
             These are images rendered with no light sources other then the flash, using auto-exposure to make them seem brighter. We can tell it is effective as the final image looks almost identical to when there is a larger light source.
@@ -344,20 +414,23 @@
          
         <h2>Contributions from each team member</h2>
         <p>
-            Katlyn Ho <br />
+            For the proposals, slides, reports, and presentations, each team member contributed and wrote about their respective part of the code.
+        </p>
+        <p>
+            <u>Katlyn Ho</u> <br />
             She worked on the helper functions, set_focus_params() and focus_depth(), for Lens and LensCamera and auto-exposure.
         </p>
         <p>
-            Jordan Bell<br />
+            <u>Jordan Bell </u><br />
             Worked on setting up the original code and fixing any issues with the older spec. Helped to debug the lenstester to get it working, and did 
             the work to implement the contrast-based autofocus.
         </p>
         <p>
-            Amy Doo <br/>
+            <u>Amy Doo</u> <br/>
             Helped debug lenstester. Worked on flash.
         </p>
         <p>
-            Su Latt Phone<br />
+            <u>Su Latt Phone</u><br />
             Implemented the Lens and LensCamera helper functions back_lens_sample() and generate_rays().
         </p>
 
