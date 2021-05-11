@@ -49,7 +49,7 @@
         <h2>
             Technical Approach
         </h2>
-        <h2>Building a Basic Working Camera</h2>
+        <h1>Building a Basic Working Camera</h1>
         <h2>Lenstester</h2>
         <p>
             To build a basic working camera, ray tracing was utilized. Lenstester is a debugging tool that we implemented to make sure that 
@@ -91,7 +91,7 @@
             using the forward tracing function that was defined.  If the ray made it through the lens, the ray is converted into world view.  Otherwise, a ray that 
             won’t hit anything is returned.
         </p>
-
+        <h1>Advanced Features</h1>
         <h2>Contrast-based Auto-Focus</h2>
         <p>
             We based our Auto-Focus algorithm algorithm off of the older spec, but extended it and tested different heuristics in order to get the best results. 
@@ -130,8 +130,8 @@
             <ol>
                 <li>
                     A variance based heuristic that computes the variance of RGB separately and then sums them.
-                    The next three heuristics all first convert the image to grayscale by summing the RGB channels weighted by human perception.
                 </li>
+                <p>The next three heuristics all first convert the image to grayscale by summing the RGB channels weighted by human perception.</p>
                 <li>
                     A Sum-Modified Laplacian heuristic that detects edges by quadrupling the current pixel and subtracting the neighboring 4 pixels, 
                     summing to the total if the value is above a certain threshold
@@ -200,11 +200,72 @@
             Finally, we found that it is more challenging to implement our own ideas, but the end results are more satisfying and rewarding.
         </p>
 
-        <h2>Results</h2>
+        <h1>Results</h1>
+        <p>
+            We start with our four lenses, both unfocused and then autofocused
+        </p>
+        <h3>50mm Dougle-Gauss</h3>
+        <div align="center">
+            <table style="width=100%">
+              <tr>
+                <td align="middle">
+                  <img src="images/lens_1_blur.png" width="480px" />
+                  <figcaption align="middle">Unfocused</figcaption>
+                </td>
+                <td align="middle">
+                  <img src="images/lens_1_clear.png" width="480px" />
+                  <figcaption align="middle">Focused</figcaption>
+                </td>
+              </tr>
+            </table>
+        </div>
+        <h3>22mm Wide-Angle</h3>
+        <div align="center">
+            <table style="width=100%">
+              <tr>
+                <td align="middle">
+                  <img src="images/lens_2_blur.png" width="480px" />
+                  <figcaption align="middle">Unfocused</figcaption>
+                </td>
+                <td align="middle">
+                  <img src="images/lens_2_clear.png" width="480px" />
+                  <figcaption align="middle">Focused</figcaption>
+                </td>
+              </tr>
+            </table>
+        </div>
+        <h3>250mm Telephoto</h3>
+        <div align="center">
+            <table style="width=100%">
+              <tr>
+                <td align="middle">
+                  <img src="images/lens_3_blur.png" width="480px" />
+                  <figcaption align="middle">Unfocused</figcaption>
+                </td>
+                <td align="middle">
+                  <img src="images/lens_3_clear.png" width="480px" />
+                  <figcaption align="middle">Focused</figcaption>
+                </td>
+              </tr>
+            </table>
+        </div>
+        <h3>10mm Fisheye</h3>
+        <div align="center">
+            <table style="width=100%">
+              <tr>
+                <td align="middle">
+                  <img src="images/lens_3_blur.png" width="480px" />
+                  <figcaption align="middle">Unfocused</figcaption>
+                </td>
+                <td align="middle">
+                  <img src="images/lens_3_clear.png" width="480px" />
+                  <figcaption align="middle">Focused</figcaption>
+                </td>
+              </tr>
+            </table>
+        </div>
 
-        <img src="" class="image">
-
-        <h2>References</h2>
+        <h1>References</h1>
         <ul>
             <li>Old project spec: <a href="https://cs184.eecs.berkeley.edu/sp16/article/19">https://cs184.eecs.berkeley.edu/sp16/article/19</a></li>
             <li>Paper the spec references: <a href="https://www.cs.utexas.edu/~fussell/courses/cs395t/lens.pdf">https://www.cs.utexas.edu/~fussell/courses/cs395t/lens.pdf </a> </li>
